@@ -1,6 +1,6 @@
 {
   "name": "@cobaltinc/bloom",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [
     "spring"
   ],
@@ -18,11 +18,19 @@
     "dist"
   ],
   "scripts": {
-    "test": "node dist/index.js",
     "dev": "parcel watch",
     "prebuild": "rimraf ./dist",
     "build": "parcel build",
     "prepublishOnly": "yarn build"
+  },
+  "dependencies": {
+    "chalk": "2.4.2",
+    "commander": "8.3.0",
+    "cpy": "8.1.2",
+    "glob": "^7.2.0",
+    "mustache": "^4.2.0",
+    "prompts": "2.4.2",
+    "update-check": "1.5.4"
   },
   "devDependencies": {
     "@types/async-retry": "1.4.2",
@@ -32,18 +40,8 @@
     "@types/rimraf": "3.0.0",
     "@types/tar": "4.0.3",
     "async-retry": "1.3.1",
-    "chalk": "2.4.2",
-    "commander": "8.3.0",
-    "cpy": "8.1.2",
-    "cross-spawn": "6.0.5",
-    "glob": "^7.2.0",
-    "got": "10.7.0",
-    "mustache": "^4.2.0",
     "parcel": "2.0.1",
-    "prompts": "2.4.2",
-    "rimraf": "3.0.0",
-    "tar": "4.4.10",
-    "update-check": "1.5.4"
+    "rimraf": "3.0.0"
   },
   "engines": {
     "node": ">=14"
