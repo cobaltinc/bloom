@@ -89,9 +89,15 @@ const generateSubsystem = async ({ subsystemName }: { subsystemName: string }) =
 }`;
 
   if (language === 'kotlin') {
-    fs.writeFileSync(`component/src/build.gradle.kts`, data);
+    fs.writeFileSync(`component/build.gradle.kts`, data);
+    await makeDir('component/src/main/kotlin');
+    await makeDir('component/src/test/kotlin');
+    await makeDir('interface/src/main/kotlin');
   } else {
-    fs.writeFileSync(`component/src/build.gradle`, data);
+    fs.writeFileSync(`component/build.gradle`, data);
+    await makeDir('component/src/main/java');
+    await makeDir('component/src/test/java');
+    await makeDir('interface/src/main/java');
   }
 
   let cdpath: string;
