@@ -63,6 +63,7 @@ const generateSubsystem = async ({ subsystemName }: { subsystemName: string }) =
     process.exit(1);
   }
 
+  await makeDir(root);
   if (!isFolderEmpty(root, subsystemName)) {
     process.exit(1);
   }
@@ -72,7 +73,6 @@ const generateSubsystem = async ({ subsystemName }: { subsystemName: string }) =
   console.log(`Creating a new Subsystem in ${chalk.green(root)}.`);
   console.log();
 
-  await makeDir(root);
   process.chdir(root);
 
   await makeDir('component');

@@ -87,6 +87,7 @@ const createApp = async ({ appPath }: { appPath: string }) => {
   }
 
   const appName = path.basename(root);
+  await makeDir(root);
   if (!isFolderEmpty(root, appName)) {
     process.exit(1);
   }
@@ -96,7 +97,6 @@ const createApp = async ({ appPath }: { appPath: string }) => {
   console.log(`Creating a new Spring application in ${chalk.green(root)}.`);
   console.log();
 
-  await makeDir(root);
   process.chdir(root);
 
   await cpy('**', root, {
