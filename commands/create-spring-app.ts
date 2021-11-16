@@ -116,6 +116,9 @@ const createApp = async ({ appPath }: { appPath: string }) => {
 
   const files = glob.sync(`${root}/**`, { nodir: true });
   files.forEach((file) => {
+    if (file.indexOf('.jar') !== -1) {
+      return;
+    }
     const data = fs.readFileSync(file, 'utf8');
     const result = Mustache.render(data, { PROJECT_NAME: appName });
     fs.writeFileSync(file, result, 'utf8');
