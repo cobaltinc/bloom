@@ -19,7 +19,6 @@ export const runNewApp = async (projectPath: string) => {
       type: 'text',
       name: 'path',
       message: 'What is your project named?',
-      initial: 'spring-app',
       validate: (name: string) => {
         if (name === '') {
           return 'Invalid project name: Not blank';
@@ -36,10 +35,10 @@ export const runNewApp = async (projectPath: string) => {
   if (!projectPath) {
     console.log();
     console.log('Please specify the project directory:');
-    console.log(`  ${chalk.cyan('bloom')} ${chalk.green('<project-directory>')}`);
+    console.log(`  ${chalk.cyan('bloom new')} ${chalk.green('<project-directory>')}`);
     console.log();
     console.log('For example:');
-    console.log(`  ${chalk.cyan('bloom')} ${chalk.green('my-spring-app')}`);
+    console.log(`  ${chalk.cyan('bloom new')} ${chalk.green('my-spring-app')}`);
     console.log();
     console.log(`Run ${chalk.cyan(`${'bloom'} --help`)} to see all options.`);
     process.exit(1);
@@ -88,8 +87,6 @@ const createApp = async ({ appPath }: { appPath: string }) => {
   }
 
   const appName = path.basename(root);
-
-  await makeDir(root);
   if (!isFolderEmpty(root, appName)) {
     process.exit(1);
   }
@@ -136,7 +133,7 @@ const createApp = async ({ appPath }: { appPath: string }) => {
     cdpath = appPath;
   }
 
-  console.log(`${chalk.green('Success!')} Created ${appName} at ${appPath}`);
+  console.log(`${chalk.green('Success!')} Created ${appName} at ${cdpath}`);
   console.log('Inside that directory, you can run several commands:');
   console.log();
   // console.log(chalk.cyan(`  bloom generate subsystem <subsystem-name>`));

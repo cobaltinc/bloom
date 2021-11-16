@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import checkForUpdate from 'update-check';
 import { runNewApp } from './commands/create-spring-app';
+import { runGenerateSubsystem } from './commands/generate-subsystem';
 import packageJson from './package.json';
 
 const program = new Command(packageJson.name)
@@ -26,8 +27,8 @@ generate
   .command('subsystem')
   .description('generate subsystem')
   .arguments('<subsystem-name>')
-  .action(() => {
-    console.log('generate subsystem');
+  .action(async (name) => {
+    await runGenerateSubsystem(name);
   });
 
 const update = checkForUpdate(packageJson).catch(() => null);
