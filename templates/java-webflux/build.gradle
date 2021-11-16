@@ -1,0 +1,49 @@
+plugins {
+  id 'org.springframework.boot' version '2.5.6'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'java'
+}
+
+allprojects {
+  group = "{{PROJECT_NAME}}"
+  version = "0.0.1"
+
+  repositories {
+    mavenCentral()
+    gradlePluginPortal()
+  }
+}
+
+subprojects {
+  apply plugin: 'org.springframework.boot'
+  apply plugin: 'io.spring.dependency-management'
+  apply plugin: 'java'
+
+  sourceCompatibility = '15'
+
+  compileJava {
+    dependsOn processResources
+  }
+
+  compileTestJava {
+    dependsOn processResources
+  }
+
+  jar {
+    enabled = true
+    archiveBaseName.set("${rootProject.name}-${project.name}")
+  }
+
+  test {
+    useJUnitPlatform()
+  }
+
+  dependencies {
+    // Spring Boot
+    implementation('org.springframework.boot:spring-boot-starter-webflux')
+
+    // Test
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('io.projectreactor:reactor-test')
+  }
+}

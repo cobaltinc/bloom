@@ -59,7 +59,7 @@ const createApp = async ({ appPath }: { appPath: string }) => {
       message: 'Choose project language',
       choices: [
         { title: 'Kotlin', value: 'kotlin' },
-        // { title: 'Java', value: 'java' },
+        { title: 'Java', value: 'java' },
       ],
     },
     {
@@ -68,7 +68,7 @@ const createApp = async ({ appPath }: { appPath: string }) => {
       message: 'Choose starter type',
       choices: [
         { title: 'WebFlux', value: 'webflux' },
-        // { title: 'WebMvc', value: 'webmvc' },
+        { title: 'WebMvc', value: 'webmvc' },
       ],
     },
   ]);
