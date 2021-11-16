@@ -7,10 +7,7 @@ import { runNewApp } from './commands/create-spring-app';
 import { runGenerateSubsystem } from './commands/generate-subsystem';
 import packageJson from './package.json';
 
-const program = new Command(packageJson.name)
-  .version(packageJson.version)
-  .option('--verbose', 'print additional logs')
-  .option('--info', 'print environment debug info');
+const program = new Command('bloom').version(packageJson.version);
 
 program
   .command('new')
@@ -21,11 +18,13 @@ program
     await runNewApp(name);
   });
 
-const generate = program.command('generate');
+const generate = program.command('generate').alias('g').description('generate [command]');
 
 generate
   .command('subsystem')
-  .description('generate subsystem')
+  .alias('s')
+  .description('generate new subsystem')
+  .usage(`${chalk.green('<subsystem-name>')} [options]`)
   .arguments('<subsystem-name>')
   .action(async (name) => {
     await runGenerateSubsystem(name);
