@@ -17,7 +17,7 @@ internal class PostController(
     this.postService.findAll()
 
   @GetMapping("/{id}")
-  fun findPostByUserId(@PathVariable id: Int): Post =
+  fun findPostById(@PathVariable id: Int): Post =
     this.postService.findById(id)
 
 }

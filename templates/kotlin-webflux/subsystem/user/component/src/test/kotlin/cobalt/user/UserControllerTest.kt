@@ -33,7 +33,7 @@ internal class UserControllerTest {
 
   @Test
   fun findAllUser() {
-    val users = MockData.users.toList()
+    val users = MockData.users
 
     given(this.userRepository.findAll())
       .willReturn(Flux.fromIterable(users))

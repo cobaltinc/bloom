@@ -19,7 +19,7 @@ internal class UserController(
     this.userService.findAll()
 
   @GetMapping("/{id}")
-  fun findAllUser(@PathVariable id: Int): UserWithPosts.Res =
+  fun findUserById(@PathVariable id: Int): UserWithPosts.Res =
     this.userService.findById(id)
 
   @GetMapping("/{id}/posts")

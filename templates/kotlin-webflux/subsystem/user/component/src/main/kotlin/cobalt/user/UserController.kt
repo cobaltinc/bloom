@@ -21,7 +21,7 @@ internal class UserController(
     this.userService.findAll()
 
   @GetMapping("/{id}")
-  fun findAllUser(@PathVariable id: Int): Mono<UserWithPosts.Res> =
+  fun findUserById(@PathVariable id: Int): Mono<UserWithPosts.Res> =
     this.userService.findById(id)
 
   @GetMapping("/{id}/posts")

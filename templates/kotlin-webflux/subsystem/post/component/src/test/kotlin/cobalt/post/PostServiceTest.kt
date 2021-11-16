@@ -26,23 +26,23 @@ internal class PostServiceTest {
     val posts = MockData.posts
 
     given(this.postRepository.findAll())
-      .willReturn(Flux.fromArray(posts))
+      .willReturn(Flux.fromIterable(posts))
 
     StepVerifier.create(this.postService.findAll())
-      .expectNext(*posts)
+      .expectNext(*posts.toTypedArray())
       .verifyComplete()
   }
 
   @Test
   fun findByUserId() {
     val userId = 1
-    val posts = MockData.posts.filter { it.userId == userId }.toTypedArray()
+    val posts = MockData.posts.filter { it.userId == userId }
 
     given(this.postRepository.findByUserId(userId))
-      .willReturn(Flux.fromArray(posts))
+      .willReturn(Flux.fromIterable(posts))
 
     StepVerifier.create(this.postService.findByUserId(1))
-      .expectNext(*posts)
+      .expectNext(*posts.toTypedArray())
       .verifyComplete()
   }
 

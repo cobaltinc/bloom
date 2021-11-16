@@ -1,0 +1,15 @@
+def projectPath = file(System.getProperty("user.dir")).absolutePath
+def subsystemPath = "$projectPath/subsystem"
+
+def subsystems = new File(subsystemPath)
+  .listFiles()
+  .stream()
+  .filter { it.isDirectory() }
+  .filter { it.name != "build" && it.name != "out" && it.name != "bin" }
+  .map { it.name }
+
+dependencies {
+  subsystems.forEach { subsystem ->
+    implementation(project(":subsystem:$subsystem:$subsystem-component"))
+  }
+}

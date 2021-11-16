@@ -27,11 +27,13 @@ internal class UserServiceTest {
 
   @Test
   fun findAll() {
+    val users = MockData.users
+
     given(this.userRepository.findAll())
-      .willReturn(Flux.fromArray(MockData.users))
+      .willReturn(Flux.fromIterable(users))
 
     StepVerifier.create(this.userService.findAll())
-      .expectNext(*MockData.users)
+      .expectNext(*users.toTypedArray())
       .verifyComplete()
   }
 
@@ -63,13 +65,13 @@ internal class UserServiceTest {
 
   @Test
   fun findAllPostByUser() {
-    val posts = MockData.posts.filter { it.userId == 1 }.toTypedArray()
+    val posts = MockData.posts.filter { it.userId == 1 }
 
     given(this.postProvided.findByUserId(1))
-      .willReturn(Flux.fromArray(posts))
+      .willReturn(Flux.fromIterable(posts))
 
     StepVerifier.create(this.userService.findAllPostByUser(1))
-      .expectNext(*posts)
+      .expectNext(*posts.toTypedArray())
       .verifyComplete()
   }
 }

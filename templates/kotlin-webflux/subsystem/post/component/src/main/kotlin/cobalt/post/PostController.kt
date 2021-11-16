@@ -19,7 +19,7 @@ internal class PostController(
     this.postService.findAll()
 
   @GetMapping("/{id}")
-  fun findPostByUserId(@PathVariable id: Int): Mono<Post> =
+  fun findPostById(@PathVariable id: Int): Mono<Post> =
     this.postService.findById(id)
 
 }

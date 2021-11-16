@@ -137,9 +137,14 @@ const createApp = async ({ appPath }: { appPath: string }) => {
   }
 
   console.log(`${chalk.green('Success!')} Created ${appName} at ${appPath}`);
-  // console.log('Inside that directory, you can run several commands:');
-  // console.log();
+  console.log('Inside that directory, you can run several commands:');
+  console.log();
   // console.log(chalk.cyan(`  bloom generate subsystem <subsystem-name>`));
   // console.log('    Generate empty subsystem.');
+  console.log();
+  console.log(chalk.cyan(`  ./gradlew :app:bootRun`));
+  console.log('    Starts the development server.');
+  console.log(chalk.cyan(`  ./gradlew :app:bootJar`));
+  console.log('    Builds the application for production.');
   console.log();
 };
