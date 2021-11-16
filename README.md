@@ -32,8 +32,26 @@ npm i -g @cobaltinc/bloom
 #### Options
 | Params | Type | Description |
 | ------ | ---- | ----------- |
-| language | `kotlin` | Choose project language |
-| type | `webflux` | Choose starter type |
+| language | `kotlin`, `java` | Choose project language |
+| type | `webflux`, `webmvc` | Choose starter type |
+
+### `generate subsystem <subsystem-name>`
+> Generate new subsystem in application.
+
+Make directories and build file in subsystem:
+```
+- subsystem
+  - <subsystem-name>
+    - component
+      - src
+        - main
+        - test
+      - build.gradle[.kts]
+    - interface
+      - src
+        - main
+        - test
+```
 
 ## :page_facing_up: License
 
