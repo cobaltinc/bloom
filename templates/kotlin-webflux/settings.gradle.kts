@@ -2,28 +2,14 @@ import java.io.File
 
 rootProject.name = "{{PROJECT_NAME}}"
 
-pluginManagement {
-  repositories {
-    maven { url = uri("https://repo.spring.io/milestone") }
-    gradlePluginPortal()
-  }
-  resolutionStrategy {
-    eachPlugin {
-      if (requested.id.id == "org.springframework.boot") {
-        useModule("org.springframework.boot:spring-boot-gradle-plugin:${requested.version}")
-      }
-    }
-  }
-}
-
 include(":app")
 
 val projectPath: String = File(System.getProperty("user.dir")).absolutePath
 val subsystemPath = "$projectPath/subsystem"
+val buildDirectory = listOf("build", "out", "bin")
 
 val subsystems = File(subsystemPath).listFiles()
-  ?.filter { it.isDirectory }
-  ?.filter { it.name != "build" && it.name != "out" && it.name != "bin" }
+  ?.filter { it.isDirectory && !buildDirectory.contains(it.name) && !it.name.startsWith(".") }
   ?.map { it.name }
 
 subsystems?.forEach { subsystem ->

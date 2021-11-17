@@ -11,7 +11,6 @@ allprojects {
 
   repositories {
     mavenCentral()
-    gradlePluginPortal()
   }
 }
 
@@ -28,7 +27,6 @@ subprojects {
       freeCompilerArgs = listOf("-Xjsr305=warn")
       jvmTarget = "15"
     }
-    dependsOn(tasks.processResources)
   }
 
   tasks.compileTestKotlin {
@@ -36,22 +34,10 @@ subprojects {
       freeCompilerArgs = listOf("-Xjsr305=warn")
       jvmTarget = "15"
     }
-    dependsOn(tasks.processResources)
-  }
-
-  tasks.jar {
-    enabled = true
-    archiveBaseName.set("${rootProject.name}-${project.name}")
   }
 
   tasks.test {
     useJUnitPlatform()
-  }
-
-  configurations {
-    compileOnly {
-      extendsFrom(configurations.annotationProcessor.get())
-    }
   }
 
   dependencies {

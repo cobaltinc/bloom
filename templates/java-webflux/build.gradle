@@ -10,7 +10,6 @@ allprojects {
 
   repositories {
     mavenCentral()
-    gradlePluginPortal()
   }
 }
 
@@ -20,19 +19,6 @@ subprojects {
   apply plugin: 'java'
 
   sourceCompatibility = '15'
-
-  compileJava {
-    dependsOn processResources
-  }
-
-  compileTestJava {
-    dependsOn processResources
-  }
-
-  jar {
-    enabled = true
-    archiveBaseName.set("${rootProject.name}-${project.name}")
-  }
 
   test {
     useJUnitPlatform()

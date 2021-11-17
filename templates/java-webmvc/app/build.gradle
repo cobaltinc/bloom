@@ -1,11 +1,11 @@
 def projectPath = file(System.getProperty("user.dir")).absolutePath
 def subsystemPath = "$projectPath/subsystem"
+def buildDirectory = ['build', 'out', 'bin']
 
 def subsystems = new File(subsystemPath)
   .listFiles()
   .stream()
-  .filter { it.isDirectory() }
-  .filter { it.name != "build" && it.name != "out" && it.name != "bin" }
+  .filter { it.isDirectory() && !buildDirectory.contains(it.name) && !it.name.startsWith(".") }
   .map { it.name }
 
 dependencies {
