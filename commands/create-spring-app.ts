@@ -9,6 +9,9 @@ import { makeDir } from '../helpers/make-dir';
 import { tryGitInit } from '../helpers/git';
 import { isWriteable } from '../helpers/is-writeable';
 import { isFolderEmpty } from '../helpers/is-folder-empty';
+import { renameRecursive } from '../helpers/rename-recursive';
+import { kebabToPascal } from '../helpers/kebab-to-pascal';
+import { camelToPascal } from '../helpers/camel-to-pascal';
 
 export const runNewApp = async (projectPath: string) => {
   if (typeof projectPath === 'string') {
@@ -86,9 +89,9 @@ const createApp = async ({ appPath }: { appPath: string }) => {
     process.exit(1);
   }
 
-  const appName = path.basename(root);
+  const projectName = path.basename(root);
   await makeDir(root);
-  if (!isFolderEmpty(root, appName)) {
+  if (!isFolderEmpty(root, projectName)) {
     process.exit(1);
   }
 
@@ -114,13 +117,19 @@ const createApp = async ({ appPath }: { appPath: string }) => {
     },
   });
 
+  const packageName = kebabToPascal(projectName).toLowerCase();
+  const applicationName = kebabToPascal(camelToPascal(projectName));
+  renameRecursive(root, '{{PROJECT_NAME}}', projectName);
+  renameRecursive(root, '{{PACKAGE_NAME}}', packageName);
+  renameRecursive(root, '{{APPLICATION_NAME}}', applicationName);
+
   const files = glob.sync(`${root}/**`, { nodir: true });
   files.forEach((file) => {
     if (file.indexOf('.jar') !== -1) {
       return;
     }
     const data = fs.readFileSync(file, 'utf8');
-    const result = Mustache.render(data, { PROJECT_NAME: appName });
+    const result = Mustache.render(data, { PROJECT_NAME: projectName, PACKAGE_NAME: packageName, APPLICATION_NAME: applicationName });
     fs.writeFileSync(file, result, 'utf8');
   });
 
@@ -130,13 +139,13 @@ const createApp = async ({ appPath }: { appPath: string }) => {
   }
 
   let cdpath: string;
-  if (path.join(originalDirectory, appName) === appPath) {
-    cdpath = appName;
+  if (path.join(originalDirectory, projectName) === appPath) {
+    cdpath = projectName;
   } else {
     cdpath = appPath;
   }
 
-  console.log(`${chalk.green('Success!')} Created ${appName} at ${cdpath}`);
+  console.log(`${chalk.green('Success!')} Created ${projectName} at ${cdpath}`);
   console.log('Inside that directory, you can run several commands:');
   console.log();
   console.log(chalk.cyan(`  bloom generate subsystem <subsystem-name>`));

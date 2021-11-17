@@ -6,7 +6,7 @@ plugins {
 }
 
 allprojects {
-  group = "{{PROJECT_NAME}}"
+  group = "{{PACKAGE_NAME}}"
   version = "0.0.1"
 
   repositories {

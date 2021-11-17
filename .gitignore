@@ -4,3 +4,11 @@ yarn-debug.log*
 yarn-error.log*
 node_modules/
 dist
+build/
+out/
+bin/
+.classpath
+.project
+.idea
+.settings
+.vscode
