@@ -60,7 +60,7 @@ You can create custom templates for new projects. For help creating a new templa
 ### Usage
 
 ```bash
-bloom new <project-name> --remote https://github.com/kciter/sample-spring-template.git
+bloom new <project-name> --remote <github-repository-url>
 ```
 
 ### Interpolation
