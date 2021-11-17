@@ -30,9 +30,10 @@ npm i -g @cobaltinc/bloom
 > Create new spring application.
 
 #### Options
-| Params | Type | Description |
+| Option | Type | Description |
 | ------ | ---- | ----------- |
 | -r, --remote | string | GitHub repository url for custom template. |
+| -t, --token | string | To use the private repository, you need to set up GitHub Personal access token. |
 
 ### `generate subsystem <subsystem-name>`
 > Generate new subsystem in application.

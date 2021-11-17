@@ -1,6 +1,6 @@
 import retry from 'async-retry';
 import chalk from 'chalk';
-import prompts from 'prompts';
+import prompts, { Answers } from 'prompts';
 import path from 'path';
 import cpy from 'cpy';
 import fs from 'fs';
@@ -139,11 +139,13 @@ const createApp = async ({ appPath, remoteUrl, token }: { appPath: string; remot
 
   process.chdir(root);
 
+  let args: Answers<any> = {};
+
   if (remoteUrl) {
     try {
       console.log(`Downloading files from repo ${chalk.cyan(remoteUrl)}. This might take a moment.`);
       console.log();
-      await retry(() => downloadAndExtractRepo(root, repoInfo!), {
+      await retry(() => downloadAndExtractRepo(root, repoInfo!, token), {
         retries: 3,
       });
     } catch (reason) {
@@ -156,7 +158,15 @@ const createApp = async ({ appPath, remoteUrl, token }: { appPath: string; remot
     // Copy our default `.gitignore` if the application did not provide one
     const ignorePath = path.join(root, '.gitignore');
     if (!fs.existsSync(ignorePath)) {
-      fs.copyFileSync(path.join(__dirname, 'templates', 'kotlin-webflux', 'gitignore'), ignorePath);
+      fs.copyFileSync(path.join(__dirname, '..', 'templates', 'kotlin-webflux', 'gitignore'), ignorePath);
+    }
+
+    const bloomPath = path.join(root, 'bloom.json');
+    if (fs.existsSync(bloomPath)) {
+      const bloomSetting = await require(bloomPath);
+      if (bloomSetting.args) {
+        args = await prompts(bloomSetting.args);
+      }
     }
   } else {
     await cpy('**', root, {
@@ -180,6 +190,9 @@ const createApp = async ({ appPath, remoteUrl, token }: { appPath: string; remot
   renameRecursive(root, '{{PROJECT_NAME}}', projectName);
   renameRecursive(root, '{{PACKAGE_NAME}}', packageName);
   renameRecursive(root, '{{APPLICATION_NAME}}', applicationName);
+  for (const [key, value] of Object.entries(args)) {
+    renameRecursive(root, `{{${key}}}`, value);
+  }
 
   const files = glob.sync(`${root}/**`, { nodir: true });
   files.forEach((file) => {
@@ -187,7 +200,7 @@ const createApp = async ({ appPath, remoteUrl, token }: { appPath: string; remot
       return;
     }
     const data = fs.readFileSync(file, 'utf8');
-    const result = Mustache.render(data, { PROJECT_NAME: projectName, PACKAGE_NAME: packageName, APPLICATION_NAME: applicationName });
+    const result = Mustache.render(data, { PROJECT_NAME: projectName, PACKAGE_NAME: packageName, APPLICATION_NAME: applicationName, ...args });
     fs.writeFileSync(file, result, 'utf8');
   });
 

@@ -43,9 +43,11 @@ export async function getRepoInfo(url: URL, token?: string, examplePath?: string
   }
 }
 
-export function downloadAndExtractRepo(root: string, { username, name, branch, filePath }: RepoInfo): Promise<void> {
+export function downloadAndExtractRepo(root: string, { username, name, branch, filePath }: RepoInfo, token?: string): Promise<void> {
   return pipeline(
-    got.stream(`https://codeload.github.com/${username}/${name}/tar.gz/${branch}`),
+    got.stream(`https://codeload.github.com/${username}/${name}/tar.gz/${branch}`, {
+      headers: { Authorization: token || process.env.GITHUB_TOKEN ? `Bearer ${token || process.env.GITHUB_TOKEN}` : undefined },
+    }),
     tar.extract({ cwd: root, strip: filePath ? filePath.split('/').length + 1 : 1 }, [`${name}-${branch}${filePath ? `/${filePath}` : ''}`]),
   );
 }
