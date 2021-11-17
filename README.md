@@ -65,6 +65,8 @@ bloom new <project-name> --remote https://github.com/kciter/sample-spring-templa
 
 ### Interpolation
 
+When project created from the template, text are converted through mustache syntax.
+
 #### Default
 
 | Params | Type | Description |
@@ -73,9 +75,45 @@ bloom new <project-name> --remote https://github.com/kciter/sample-spring-templa
 | PACKAGE_NAME | string | Convert the project name to lower case. |
 | APPLICATION_NAME | string | Convert the project name to PascalCase. Typically used for `Application` class. |
 
-### Extension
+### Additional
 
+If you need additional data, you can create a `bloom.json` file in custom template repo:
+```json
+{
+  "args": [
+    {
+      "type": "number",
+      "name": "VERSION",
+      "message": "Set initial version",
+      "min": 1,
+      "max": 5
+    },
+    {
+      "type": "text",
+      "name": "DATABASE_URL",
+      "message": "Set database url"
+    },
+    {
+      "type": "password",
+      "name": "DATABASE_PASSWORD",
+      "message": "Set database password"
+    },
+    {
+      "type": "select",
+      "name": "SELECT",
+      "message": "Pick your database",
+      "choices": [
+        { "title": "MySQL" },
+        { "title": "MariaDB" },
+        { "title": "PostgreSQL" },
+        { "title": "Oracle" }
+      ]
+    }
+  ]
+}
+```
 
+<img src="https://user-images.githubusercontent.com/3623695/142178419-c3433610-a1f2-4d79-945d-12be3139778f.png" width="500px" />
 
 ## :page_facing_up: License
 
