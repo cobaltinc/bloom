@@ -1,9 +1,7 @@
 import chalk from 'chalk';
 import prompts from 'prompts';
 import path from 'path';
-import cpy from 'cpy';
 import fs from 'fs';
-import glob from 'glob';
 import { makeDir } from '../helpers/make-dir';
 import { isWriteable } from '../helpers/is-writeable';
 import { isFolderEmpty } from '../helpers/is-folder-empty';
