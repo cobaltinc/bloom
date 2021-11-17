@@ -12,8 +12,8 @@ const program = new Command('bloom').version(packageJson.version);
 program
   .command('new')
   .description('create new spring application')
-  .arguments('<project-directory>')
-  .usage(`${chalk.green('<project-directory>')} [options]`)
+  .arguments('[project-name]')
+  .usage(`${chalk.green('<project-name>')} [options]`)
   .action(async (name) => {
     await runNewApp(name);
   });
