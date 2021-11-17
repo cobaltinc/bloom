@@ -1,3 +1,4 @@
+import retry from 'async-retry';
 import chalk from 'chalk';
 import prompts from 'prompts';
 import path from 'path';
@@ -12,8 +13,9 @@ import { isFolderEmpty } from '../helpers/is-folder-empty';
 import { renameRecursive } from '../helpers/rename-recursive';
 import { kebabToPascal } from '../helpers/kebab-to-pascal';
 import { camelToPascal } from '../helpers/camel-to-pascal';
+import { downloadAndExtractRepo, getRepoInfo, RepoInfo } from '../helpers/github-remote';
 
-export const runNewApp = async (projectPath: string) => {
+export const runNewApp = async (projectPath: string, remoteUrl?: string, token?: string) => {
   if (typeof projectPath === 'string') {
     projectPath = projectPath.trim();
   }
@@ -50,36 +52,71 @@ export const runNewApp = async (projectPath: string) => {
   const resolvedProjectPath = path.resolve(projectPath);
   await createApp({
     appPath: resolvedProjectPath,
+    remoteUrl,
+    token,
   });
 };
 
-const createApp = async ({ appPath }: { appPath: string }) => {
-  const { language, type } = await prompts([
-    {
-      type: 'select',
-      name: 'language',
-      message: 'Choose project language',
-      choices: [
-        { title: 'Kotlin', value: 'kotlin' },
-        { title: 'Java', value: 'java' },
-      ],
-    },
-    {
-      type: 'select',
-      name: 'type',
-      message: 'Choose starter type',
-      choices: [
-        { title: 'WebFlux', value: 'webflux' },
-        { title: 'WebMvc', value: 'webmvc' },
-      ],
-    },
-  ]);
+const createApp = async ({ appPath, remoteUrl, token }: { appPath: string; remoteUrl?: string; token?: string }) => {
+  let template: string = '';
+  let repoInfo: RepoInfo | undefined;
 
-  if (!language || !type) {
-    process.exit(1);
+  if (remoteUrl) {
+    template = remoteUrl;
+    let repoUrl: URL | undefined;
+
+    try {
+      repoUrl = new URL(remoteUrl);
+    } catch (error: any) {
+      if (error.code !== 'ERR_INVALID_URL') {
+        console.error(error);
+        process.exit(1);
+      }
+    }
+
+    if (repoUrl) {
+      if (repoUrl.origin !== 'https://github.com') {
+        console.error(`Invalid URL: ${chalk.red(`"${remoteUrl}"`)}. Only GitHub repositories are supported. Please use a GitHub URL and try again.`);
+        process.exit(1);
+      }
+
+      repoInfo = await getRepoInfo(repoUrl, token);
+
+      if (!repoInfo) {
+        console.error(`Found invalid GitHub URL: ${chalk.red(`"${remoteUrl}"`)}. Please fix the URL and try again.`);
+        process.exit(1);
+      }
+    } else {
+      process.exit(1);
+    }
+  } else {
+    const { language, type } = await prompts([
+      {
+        type: 'select',
+        name: 'language',
+        message: 'Choose project language',
+        choices: [
+          { title: 'Kotlin', value: 'kotlin' },
+          { title: 'Java', value: 'java' },
+        ],
+      },
+      {
+        type: 'select',
+        name: 'type',
+        message: 'Choose starter type',
+        choices: [
+          { title: 'WebFlux', value: 'webflux' },
+          { title: 'WebMvc', value: 'webmvc' },
+        ],
+      },
+    ]);
+
+    if (!language || !type) {
+      process.exit(1);
+    }
+
+    template = `${language}-${type}`;
   }
-
-  const template = `${language}-${type}`;
 
   const root = path.resolve(appPath);
 
@@ -102,20 +139,41 @@ const createApp = async ({ appPath }: { appPath: string }) => {
 
   process.chdir(root);
 
-  await cpy('**', root, {
-    parents: true,
-    cwd: path.join(__dirname, '..', 'templates', template),
-    rename: (name) => {
-      switch (name) {
-        case 'gitignore': {
-          return '.'.concat(name);
-        }
-        default: {
-          return name;
-        }
+  if (remoteUrl) {
+    try {
+      console.log(`Downloading files from repo ${chalk.cyan(remoteUrl)}. This might take a moment.`);
+      console.log();
+      await retry(() => downloadAndExtractRepo(root, repoInfo!), {
+        retries: 3,
+      });
+    } catch (reason) {
+      function isErrorLike(err: unknown): err is { message: string } {
+        return typeof err === 'object' && err !== null && typeof (err as { message?: unknown }).message === 'string';
       }
-    },
-  });
+      console.error(isErrorLike(reason) ? reason.message : reason + '');
+      process.exit(1);
+    }
+    // Copy our default `.gitignore` if the application did not provide one
+    const ignorePath = path.join(root, '.gitignore');
+    if (!fs.existsSync(ignorePath)) {
+      fs.copyFileSync(path.join(__dirname, 'templates', 'kotlin-webflux', 'gitignore'), ignorePath);
+    }
+  } else {
+    await cpy('**', root, {
+      parents: true,
+      cwd: path.join(__dirname, '..', 'templates', template),
+      rename: (name) => {
+        switch (name) {
+          case 'gitignore': {
+            return '.'.concat(name);
+          }
+          default: {
+            return name;
+          }
+        }
+      },
+    });
+  }
 
   const packageName = kebabToPascal(projectName).toLowerCase();
   const applicationName = kebabToPascal(camelToPascal(projectName));

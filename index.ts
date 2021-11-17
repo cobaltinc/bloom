@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable import/no-extraneous-dependencies */
 import chalk from 'chalk';
 import { Command } from 'commander';
 import checkForUpdate from 'update-check';
@@ -13,9 +12,11 @@ program
   .command('new')
   .description('create new spring application')
   .arguments('[project-name]')
+  .option('-r, --remote <github-repository-url>', 'new application from custom template')
+  .option('-t, --token <github-token>', 'github personal access token')
   .usage(`${chalk.green('<project-name>')} [options]`)
-  .action(async (name) => {
-    await runNewApp(name);
+  .action(async (name, options) => {
+    await runNewApp(name, options.remote, options.token);
   });
 
 const generate = program.command('generate').alias('g').description('generate [command]');

@@ -24,7 +24,7 @@ npm i -g @cobaltinc/bloom
 
 <img src="https://user-images.githubusercontent.com/3623695/141818097-1890328d-56a0-4717-852a-546e9153ed11.gif" width="500px" />
 
-## Commands
+## :sparkles: Commands
 
 ### `new <project-name>`
 > Create new spring application.
@@ -32,8 +32,7 @@ npm i -g @cobaltinc/bloom
 #### Options
 | Params | Type | Description |
 | ------ | ---- | ----------- |
-| language | `kotlin`, `java` | Choose project language |
-| type | `webflux`, `webmvc` | Choose starter type |
+| -r, --remote | string | GitHub repository url for custom template. |
 
 ### `generate subsystem <subsystem-name>`
 > Generate new subsystem in application.
@@ -52,6 +51,30 @@ Make directories and build file in subsystem:
         - main
         - test
 ```
+
+## :bookmark: Custom Template
+
+You can create custom templates for new projects. For help creating a new template, see the [templates]('./templates) directory.
+
+### Usage
+
+```bash
+bloom new <project-name> --remote https://github.com/kciter/sample-spring-template.git
+```
+
+### Interpolation
+
+#### Default
+
+| Params | Type | Description |
+| ------ | ---- | ----------- |
+| PROJECT_NAME | string | The project name you entered. |
+| PACKAGE_NAME | string | Convert the project name to lower case. |
+| APPLICATION_NAME | string | Convert the project name to PascalCase. Typically used for `Application` class. |
+
+### Extension
+
+
 
 ## :page_facing_up: License
 
