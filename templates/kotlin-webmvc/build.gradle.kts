@@ -1,8 +1,8 @@
 plugins {
   kotlin("jvm") version "1.7.0"
   kotlin("plugin.spring") version "1.7.0"
-  id("org.springframework.boot") version "2.5.6"
-  id("io.spring.dependency-management") version "1.0.11.RELEASE"
+  id("org.springframework.boot") version "2.7.1"
+  id("io.spring.dependency-management") version "1.0.12.RELEASE"
 }
 
 allprojects {
@@ -20,19 +20,19 @@ subprojects {
   apply(plugin = "org.springframework.boot")
   apply(plugin = "io.spring.dependency-management")
 
-  java.sourceCompatibility = JavaVersion.VERSION_15
+  java.sourceCompatibility = JavaVersion.VERSION_17
 
   tasks.compileKotlin {
     kotlinOptions {
       freeCompilerArgs = listOf("-Xjsr305=warn")
-      jvmTarget = "15"
+      jvmTarget = "17"
     }
   }
 
   tasks.compileTestKotlin {
     kotlinOptions {
       freeCompilerArgs = listOf("-Xjsr305=warn")
-      jvmTarget = "15"
+      jvmTarget = "17"
     }
   }
 
